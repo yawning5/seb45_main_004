@@ -22,8 +22,10 @@ public class OAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> oauth(@RequestBody @Valid OAuth oAuth) {
+        // 로그인한 정보를 바탕으로 해당 유저에 관련된 토큰을 반환해준다
         Token token = oAuthService.login(oAuth.getProvider(), oAuth.getCode());
 
+        // 헤더에 담는 과정은 똑같음
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token.getAccessToken());
         headers.add("Refresh", "Bearer " + token.getRefreshToken());

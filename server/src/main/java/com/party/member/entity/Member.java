@@ -48,11 +48,12 @@ public class Member {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    public static Member createMember(String email, String password, String nickname) {
+    public static Member createMember(String email, String password, String nickname, String gender) {
         return Member.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
+                .gender(gender)
                 .roles(List.of("USER"))
                 .build();
     }

@@ -66,20 +66,29 @@ public class OAuthService {
         // 구글 같은 클라이언트의 리소스에 접속할 토큰을 얻는 것
         String token = getToken(code, clientRegistration);
 
+        // 사용자의 상세정보를 받아와서 변수에 할당한다.
         OAuth2User oAuth2User = getOAuth2User(token, clientRegistration);
 
+        // oAuth2User로 받아온 정보를 새로운 HashMap에 복사한다
         Map<String, Object> attributes = new HashMap<>(oAuth2User.getAttributes());
 
+        // 이건 OAuthProvider에 정의되어 있는 내용을 좀 봐야하는데
+        // registrationId로 google, kakao 등 어떤 건지 식별하고
+        // enum에 정의 되어있는 attributes 함수를 사용해서
+        // 원하는 정보를 빼온다(각 enum에 정의되어 있음)
         MemberProfile memberProfile = OAuthProvider.extract(registrationId, attributes);
 
+        // memberProfile로 받아오는 정보가 DB에 있으면 그대로 member를 반환하고
+        // DB에 없으면 새로 등록해주는 과정을 거치는 메서드
         Member member = getOrSaveMember(memberProfile);
 
+        // 위의 과정중에 오류가 없으면 member를 이용해서 Jwt 토큰을 만들어서 반환함
         return createToken(member);
 
     }
 
     public String getToken(String code, ClientRegistration clientRegistration) {
-        // 구글의 정보에서 서비스 제공자의 상세정보에서 토큰을 얻을 수 있는 URI를 얻어옴.
+        // 서비스 제공자의 상세정보에서 토큰을 얻을 수 있는 URI를 얻어옴.
         String uri = clientRegistration.getProviderDetails().getTokenUri();
 
         //요청 인코딩 설정
@@ -118,6 +127,7 @@ public class OAuthService {
         OAuth2UserRequest userRequest = new OAuth2UserRequest(clientRegistration, tokenResponse.getAccessToken());
 
         // loadUser는 주어진 OAuth2UserRequest를 사용해서 사용자 정보 엔드포인트로부터
+        // (엔드포인트는 clientRegistration에 있음 yml에 설정해 둔걸 가지고 온거임)
         // OAuth2User를 얻어옴 내부적으로 OAuth2Request에 포함된 엑세스 토큰과
         // ClientRegistration 정보를 사용해서 OAuth2
         // 서비스 제공자의 사용자 정보 엔드포인트에 요청을 보냄
@@ -154,7 +164,8 @@ public class OAuthService {
         Member member = Member.createMember(
                 memberProfile.getEmail(),
                 "oauthUser",
-                memberProfile.getEmail().split("@")[0]
+                memberProfile.getEmail().split("@")[0],
+                memberProfile.getGender()
         );
         Member signMember = memberRepository.save(member);
         return signMember;

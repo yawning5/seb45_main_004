@@ -39,6 +39,12 @@ public class MemberController {
         return new ResponseEntity(mapper.memberToMemberResponseDto(member), HttpStatus.OK);
     }
 
+    @GetMapping("/test")
+    public String redirect() {
+        return "redirect:https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=3900b85057673808b382401173a040e5&redirect_uri=https://www.naver.com";  // 원하는 주소로 리다이렉트합니다.
+    }
+
+
 //    @PatchMapping("/{member-id}")
 //    public ResponseEntity patchMember(@PathVariable("member-id") long memberid) {
 //        Long id = (Long) memberService.extractMemberInfo().get("id");

@@ -10,4 +10,5 @@ import lombok.Getter;
 public class MemberProfile {
 
     private String email;
+    private String gender;
 }
