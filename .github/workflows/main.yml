@@ -63,18 +63,18 @@ jobs:
               '  sudo docker stop server',
               '  sudo docker rm server',
               'fi',
-              'sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd01:${GITHUB_SHA::7}',
-              'sudo docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd01:${GITHUB_SHA::7} spring-cicd01',
+              'sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd:${GITHUB_SHA::7}',
+              'sudo docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd:${GITHUB_SHA::7} spring-cicd',
               'sudo docker run -d --name server -p 8080:8080 -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
-              -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \ 
-              -e DOCKER_HUB_PASSWORD=${{ secrets.DOCKER_HUB_PASSWORD }} \ 
-              -e DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }} \
-              -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
-              -e MYSQL_DATABASE_PASSWORD=${{ secrets.MYSQL_DATABASE_PASSWORD }} \
-              -e MYSQL_DATABASE_URL=${{ secrets.MYSQL_DATABASE_URL }} \
-              -e MYSQL_DATABASE_USERNAME=${{ secrets.MYSQL_DATABASE_USERNAME }} \
-              -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
-              -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
-              spring-cicd01'
+              -e AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}} \ 
+              -e DOCKER_HUB_PASSWORD=${{secrets.DOCKER_HUB_PASSWORD}} \ 
+              -e DOCKER_HUB_USERNAME=${{secrets.DOCKER_HUB_USERNAME}} \
+              -e JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}} \
+              -e MYSQL_DATABASE_PASSWORD=${{secrets.MYSQL_DATABASE_PASSWORD}} \
+              -e MYSQL_DATABASE_URL=${{secrets.MYSQL_DATABASE_URL}} \
+              -e MYSQL_DATABASE_USERNAME=${{secrets.MYSQL_DATABASE_USERNAME}} \
+              -e KAKAO_CLIENT_ID=${{secrets.KAKAO_CLIENT_ID}} \
+              -e KAKAO_CLIENT_SECRET=${{secrets.KAKAO_CLIENT_SECRET}} \
+              spring-cicd'
            ]" \
            --output text
