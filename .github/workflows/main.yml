@@ -50,13 +50,6 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-northeast-2
 
-      - name: Stop and Remove Docker Container
-        run: |
-          if sudo docker ps -a --format '{{.Names}}' | grep -q '^server$'; then
-            sudo docker stop server
-            sudo docker rm server
-          fi
-
       - name: Deploy to Server
         run: |
           aws ssm send-command \
