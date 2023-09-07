@@ -23,7 +23,7 @@ public class ImageController {
     private final AwsService awsService;
     private final MemberService memberService;
 
-    
+    //11
     @GetMapping("/images")
     public List<String> getTestImage(){
         List<String> list = awsService.getFileList("board");
