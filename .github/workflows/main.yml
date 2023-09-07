@@ -1,15 +1,21 @@
-name: Server Deploy
+name: Server Deploy           
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'server/**'
+      - 'server/**'  
 
 jobs:
   server:
-
     runs-on: ubuntu-latest
+
+    env: 
+      AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+      KAKAO_CLIENT_ID: ${{secrets.KAKAO_CLIENT_ID}}
+      KAKAO_CLIENT_SECRET: ${{secrets.KAKAO_CLIENT_SECRET}}
 
     steps:
       - uses: actions/checkout@v2
@@ -18,19 +24,23 @@ jobs:
         with:
           java-version: '11'
           distribution: 'zulu'
+          
       - name: Grant execute permission for gradlew
         working-directory: ./server
-        run: chmod +x gradlew
+        run: chmod +x gradlew   
+        
       - name: Build with Gradle
         working-directory: ./server
-        run: ./gradlew build
-      - name: Docker build
+        run: ./gradlew build  
+        
+      - name: Docker build 
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
           cd server
           docker build -t spring-cicd . 
           docker tag spring-cicd ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd:${GITHUB_SHA::7}
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd:${GITHUB_SHA::7}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -55,6 +65,15 @@ jobs:
               'fi',
               'sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd:${GITHUB_SHA::7}',
               'sudo docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/spring-cicd:${GITHUB_SHA::7} spring-cicd',
-              'sudo docker run -d --name server -p 8080:8080 spring-cicd'
+              'sudo docker run -d --name server -p 8080:8080 -e AWS_ACCESS_KEY=${AWS_ACCESS_KEY} \
+              -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \ 
+              -e DOCKER_HUB_PASSWORD=${DOCKER_HUB_PASSWORD} \ 
+              -e DOCKER_HUB_USERNAME=${DOCKER_HUB_USERNAME} \
+              -e JWT_SECRET_KEY=${JWT_SECRET_KEY} \
+              -e MYSQL_DATABASE_PASSWORD=${MYSQL_DATABASE_PASSWORD} \
+              -e MYSQL_DATABASE_URL=${MYSQL_DATABASE_URL} \
+              -e MYSQL_DATABASE_USERNAME=${MYSQL_DATABASE_USERNAME} \
+              -e KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID} \
+              -e KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET} spring-cicd'
            ]" \
            --output text
