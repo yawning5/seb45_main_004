@@ -26,7 +26,7 @@ public class ImageController {
     //테스트!
     @GetMapping("/images")
     public List<String> getTestImage(){
-        List<String> list = awsService.getFileList("board");
+        List<String> list = awsService.getFileList("profile");
         return list;
     }
 
