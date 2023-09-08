@@ -72,5 +72,5 @@ jobs:
                 -e MYSQL_DATABASE_USERNAME=${{secrets.MYSQL_DATABASE_USERNAME}} \
                 -e KAKAO_CLIENT_ID=${{secrets.KAKAO_CLIENT_ID}} \
                 -e KAKAO_CLIENT_SECRET=${{secrets.KAKAO_CLIENT_SECRET}} \
-                spring-cicd'
+                ${{secrets.DOCKER_HUB_USERNAME}}/spring-cicd:${GITHUB_SHA::7}'
             ]"
