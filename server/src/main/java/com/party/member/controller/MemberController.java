@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-// 액션실행
+// 액션
 
 @Transactional
 @Service
